@@ -1,12 +1,12 @@
 class Kassa:
     def __init__(self):
-        self.amount = 0  # текущее количество денег в кассе
+        self.amount = 0
 
     def top_up(self, X):
         self.amount += X
 
     def count_1000(self):
-        return self.amount // 1000  # сколько целых тысяч осталось
+        return self.amount // 1000
 
     def take_away(self, X):
         if X > self.amount:
