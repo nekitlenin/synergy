@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; font-src 'self' data:;">
+<title>Калькулятор — Интерактивное веб-приложение</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+
+  <!-- Декоративные фоновые круги -->
+  <div class="absolute top-[-100px] left-[-100px] w-72 h-72 bg-purple-500 rounded-full opacity-20 blur-3xl"></div>
+  <div class="absolute bottom-[-100px] right-[-100px] w-72 h-72 bg-indigo-500 rounded-full opacity-20 blur-3xl"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500 rounded-full opacity-10 blur-3xl"></div>
+
+  <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-8 w-full max-w-md relative z-10">
+
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl mb-4 shadow-lg shadow-purple-500/50">
+        <span class="text-32" role="img" aria-label="Калькулятор">🧮</span>
+      </div>
+      <h1 class="text-28 font-extrabold text-white tracking-tight">Калькулятор</h1>
+      <p class="text-14 text-purple-200 mt-1">Выполните простые вычисления</p>
+    </div>
+
+    <div class="flex flex-col gap-4 mb-6">
+      <div class="relative">
+        <label for="num1" class="absolute left-4 top-1/2 -translate-y-1/2 text-purple-300 text-16 font-bold pointer-events-none">A</label>
+        <input
+          id="num1"
+          type="text"
+          inputmode="decimal"
+          placeholder="Первое число"
+          class="w-full pl-10 pr-4 py-3.5 bg-white/10 border-2 border-white/20 rounded-xl text-16 text-white placeholder-purple-300 outline-none focus:border-indigo-400 focus:bg-white/15 transition-all duration-200"
+          aria-label="Первое число для вычисления"
+          autocomplete="off"
+        >
+      </div>
+      <div class="relative">
+        <label for="num2" class="absolute left-4 top-1/2 -translate-y-1/2 text-purple-300 text-16 font-bold pointer-events-none">B</label>
+        <input
+          id="num2"
+          type="text"
+          inputmode="decimal"
+          placeholder="Второе число"
+          class="w-full pl-10 pr-4 py-3.5 bg-white/10 border-2 border-white/20 rounded-xl text-16 text-white placeholder-purple-300 outline-none focus:border-indigo-400 focus:bg-white/15 transition-all duration-200"
+          aria-label="Второе число для вычисления"
+          autocomplete="off"
+        >
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 mb-6">
+      <button
+        data-operation="sum"
+        class="group relative font-bold py-4 rounded-xl transition-all duration-200 text-white active:scale-95 overflow-hidden bg-gradient-to-br from-indigo-500 to-indigo-600 hover:from-indigo-400 hover:to-indigo-500 shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40"
+        aria-label="Сложение"
+        title="Сложение (A + B)"
+      >
+        <span class="relative z-10 flex items-center justify-center gap-2">
+          <span class="text-20" aria-hidden="true">➕</span>
+          Сумма
+        </span>
+        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+      </button>
+
+      <button
+        data-operation="difference"
+        class="group relative font-bold py-4 rounded-xl transition-all duration-200 text-white active:scale-95 overflow-hidden bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40"
+        aria-label="Вычитание"
+        title="Вычитание (A - B)"
+      >
+        <span class="relative z-10 flex items-center justify-center gap-2">
+          <span class="text-20" aria-hidden="true">➖</span>
+          Разность
+        </span>
+        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+      </button>
+
+      <button
+        data-operation="product"
+        class="group relative font-bold py-4 rounded-xl transition-all duration-200 text-white active:scale-95 overflow-hidden bg-gradient-to-br from-pink-500 to-pink-600 hover:from-pink-400 hover:to-pink-500 shadow-lg shadow-pink-500/30 hover:shadow-xl hover:shadow-pink-500/40"
+        aria-label="Умножение"
+        title="Умножение (A × B)"
+      >
+        <span class="relative z-10 flex items-center justify-center gap-2">
+          <span class="text-20" aria-hidden="true">✖️</span>
+          Произведение
+        </span>
+        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+      </button>
+
+      <button
+        data-operation="division"
+        class="group relative font-bold py-4 rounded-xl transition-all duration-200 text-white active:scale-95 overflow-hidden bg-gradient-to-br from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 shadow-lg shadow-rose-500/30 hover:shadow-xl hover:shadow-rose-500/40"
+        aria-label="Деление"
+        title="Деление (A ÷ B)"
+      >
+        <span class="relative z-10 flex items-center justify-center gap-2">
+          <span class="text-20" aria-hidden="true">➗</span>
+          Деление
+        </span>
+        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+      </button>
+    </div>
+
+    <!-- Кнопка очистки -->
+    <button
+      id="clearBtn"
+      class="w-full mb-6 py-3 bg-slate-700/50 hover:bg-slate-700/70 text-white font-semibold rounded-xl transition-all duration-200 border border-slate-600/50"
+      aria-label="Очистить все поля"
+    >
+      <span class="flex items-center justify-center gap-2">
+        <span aria-hidden="true">🔄</span>
+        Очистить
+      </span>
+    </button>
+
+    <div class="relative">
+      <div class="absolute -top-3 left-4 bg-slate-900 px-2">
+        <span class="text-12 text-purple-300 font-semibold uppercase tracking-wider">Результат</span>
+      </div>
+      <div 
+        class="bg-black/30 border-2 border-white/20 rounded-2xl p-6 min-h-20 flex items-center justify-center shadow-inner cursor-pointer hover:bg-black/40 transition-colors duration-200"
+        id="resultContainer"
+        title="Нажмите, чтобы скопировать результат"
+        role="button"
+        tabindex="0"
+      >
+        <span id="result" class="text-24 font-bold text-white break-all text-center" aria-live="polite">
+          —
+        </span>
+      </div>
+      <div class="text-center mt-2">
+        <span id="copyFeedback" class="text-xs text-green-400 opacity-0 transition-opacity duration-300">✓ Скопировано!</span>
+      </div>
+    </div>
+
+    <!-- История вычислений -->
+    <div id="historyContainer" class="mt-6 hidden">
+      <div class="text-sm text-purple-300 font-semibold mb-2 flex items-center justify-between">
+        <span>История</span>
+        <button id="clearHistory" class="text-xs text-slate-400 hover:text-white transition-colors">Очистить</button>
+      </div>
+      <div id="historyList" class="space-y-1 max-h-32 overflow-y-auto text-sm text-slate-300"></div>
+    </div>
+
+  </div>
+
+  <script>
+    'use strict';
+    
+    /**
+     * Калькулятор - модульное приложение для выполнения арифметических операций
+     * @module Calculator
+     */
+    (function() {
+      
+      // ============ КОНСТАНТЫ ============
+      const OPERATIONS = {
+        sum: { 
+          fn: (a, b) => a + b, 
+          symbol: '+',
+          name: 'Сумма'
+        },
+        difference: { 
+          fn: (a, b) => a - b, 
+          symbol: '-',
+          name: 'Разность'
+        },
+        product: { 
+          fn: (a, b) => a * b, 
+          symbol: '×',
+          name: 'Произведение'
+        },
+        division: { 
+          fn: (a, b) => {
+            if (b === 0) throw new Error('Деление на ноль невозможно');
+            return a / b;
+          }, 
+          symbol: '÷',
+          name: 'Деление'
+        }
+      };
+      
+      const MESSAGES = {
+        ERROR_INVALID_INPUT: '⚠️ Введите корректные числа',
+        ERROR_DIVISION_ZERO: '⚠️ Деление на ноль невозможно',
+        INITIAL_RESULT: '—',
+        COPY_SUCCESS: '✓ Скопировано!'
+      };
+      
+      const VALID_NUMBER_REGEX = /^-?\d*[.,]?\d*$/;
+      const COMPLETE_NUMBER_REGEX = /^-?\d+(\.\d+)?$/;
+      const MAX_HISTORY_ITEMS = 10;
+      
+      // ============ СОСТОЯНИЕ ============
+      let calculationHistory = [];
+      let lastOperation = null;
+      
+      // ============ DOM ЭЛЕМЕНТЫ ============
+      const elements = {
+        num1: document.getElementById('num1'),
+        num2: document.getElementById('num2'),
+        result: document.getElementById('result'),
+        resultContainer: document.getElementById('resultContainer'),
+        clearBtn: document.getElementById('clearBtn'),
+        copyFeedback: document.getElementById('copyFeedback'),
+        historyContainer: document.getElementById('historyContainer'),
+        historyList: document.getElementById('historyList'),
+        clearHistory: document.getElementById('clearHistory'),
+        operationButtons: document.querySelectorAll('[data-operation]')
+      };
+      
+      // ============ ВАЛИДАЦИЯ ============
+      
+      /**
+       * Ограничивает ввод только разрешёнными символами
+       * @param {HTMLInputElement} inputEl - Элемент input
+       */
+      function restrictInput(inputEl) {
+        inputEl.addEventListener('input', function() {
+          const value = this.value;
+          
+          if (!VALID_NUMBER_REGEX.test(value)) {
+            this.value = this.dataset.prevValue || '';
+          } else {
+            this.dataset.prevValue = value;
+          }
+        });
+      }
+      
+      /**
+       * Проверяет, является ли строка валидным числом
+       * @param {string} str - Строка для проверки
+       * @returns {boolean}
+       */
+      function isValidNumber(str) {
+        if (str === '' || str === '-' || str === '.' || str === ',') return false;
+        const normalized = str.replace(',', '.');
+        return COMPLETE_NUMBER_REGEX.test(normalized);
+      }
+      
+      /**
+       * Преобразует строку в число
+       * @param {string} str - Строка для преобразования
+       * @returns {number}
+       */
+      function parseNumber(str) {
+        return parseFloat(str.replace(',', '.'));
+      }
+      
+      // ============ ВЫЧИСЛЕНИЯ ============
+      
+      /**
+       * Выполняет вычисление по заданной операции
+       * @param {string} operation - Тип операции
+       */
+      function calculate(operation) {
+        const num1Input = elements.num1.value.trim();
+        const num2Input = elements.num2.value.trim();
+        
+        elements.result.classList.remove('text-white', 'text-red-400', 'text-green-400');
+        
+        // Валидация
+        if (!isValidNumber(num1Input) || !isValidNumber(num2Input)) {
+          displayError(MESSAGES.ERROR_INVALID_INPUT);
+          return;
+        }
+        
+        const num1 = parseNumber(num1Input);
+        const num2 = parseNumber(num2Input);
+        
+        try {
+          const operationConfig = OPERATIONS[operation];
+          const result = operationConfig.fn(num1, num2);
+          
+          displayResult(result);
+          addToHistory(num1, num2, operation, result);
+          lastOperation = operation;
+          
+        } catch (error) {
+          displayError('⚠️ ' + error.message);
+        }
+      }
+      
+      /**
+       * Отображает результат вычисления
+       * @param {number} value - Результат
+       */
+      function displayResult(value) {
+        elements.result.textContent = value;
+        elements.result.classList.add('text-green-400');
+      }
+      
+      /**
+       * Отображает сообщение об ошибке
+       * @param {string} message - Текст ошибки
+       */
+      function displayError(message) {
+        elements.result.textContent = message;
+        elements.result.classList.add('text-red-400');
+      }
+      
+      // ============ ИСТОРИЯ ============
+      
+      /**
+       * Добавляет вычисление в историю
+       * @param {number} num1 - Первое число
+       * @param {number} num2 - Второе число
+       * @param {string} operation - Операция
+       * @param {number} result - Результат
+       */
+      function addToHistory(num1, num2, operation, result) {
+        const operationConfig = OPERATIONS[operation];
+        const historyItem = {
+          num1,
+          num2,
+          operation,
+          symbol: operationConfig.symbol,
+          result,
+          timestamp: Date.now()
+        };
+        
+        calculationHistory.unshift(historyItem);
+        
+        if (calculationHistory.length > MAX_HISTORY_ITEMS) {
+          calculationHistory.pop();
+        }
+        
+        updateHistoryDisplay();
+        saveHistoryToStorage();
+      }
+      
+      /**
+       * Обновляет отображение истории
+       */
+      function updateHistoryDisplay() {
+        if (calculationHistory.length === 0) {
+          elements.historyContainer.classList.add('hidden');
+          return;
+        }
+        
+        elements.historyContainer.classList.remove('hidden');
+        elements.historyList.innerHTML = calculationHistory.map(item => 
+          `<div class="bg-white/5 px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer" 
+                data-result="${item.result}">
+            ${item.num1} ${item.symbol} ${item.num2} = <span class="text-green-400 font-semibold">${item.result}</span>
+          </div>`
+        ).join('');
+        
+        // Обработчик клика по элементу истории
+        elements.historyList.querySelectorAll('[data-result]').forEach(item => {
+          item.addEventListener('click', function() {
+            const result = this.dataset.result;
+            copyToClipboard(result);
+          });
+        });
+      }
+      
+      /**
+       * Очищает историю вычислений
+       */
+      function clearHistoryData() {
+        calculationHistory = [];
+        updateHistoryDisplay();
+        localStorage.removeItem('calculatorHistory');
+      }
+      
+      /**
+       * Сохраняет историю в localStorage
+       */
+      function saveHistoryToStorage() {
+        try {
+          localStorage.setItem('calculatorHistory', JSON.stringify(calculationHistory));
+        } catch (e) {
+          console.warn('Не удалось сохранить историю:', e);
+        }
+      }
+      
+      /**
+       * Загружает историю из localStorage
+       */
+      function loadHistoryFromStorage() {
+        try {
+          const stored = localStorage.getItem('calculatorHistory');
+          if (stored) {
+            calculationHistory = JSON.parse(stored);
+            updateHistoryDisplay();
+          }
+        } catch (e) {
+          console.warn('Не удалось загрузить историю:', e);
+        }
+      }
+      
+      // ============ УТИЛИТЫ ============
+      
+      /**
+       * Очищает все поля ввода и результат
+       */
+      function clearAll() {
+        elements.num1.value = '';
+        elements.num2.value = '';
+        elements.result.textContent = MESSAGES.INITIAL_RESULT;
+        elements.result.classList.remove('text-red-400', 'text-green-400');
+        elements.result.classList.add('text-white');
+        elements.num1.focus();
+      }
+      
+      /**
+       * Копирует текст в буфер обмена
+       * @param {string} text - Текст для копирования
+       */
+      function copyToClipboard(text) {
+        if (text === MESSAGES.INITIAL_RESULT || text.includes('⚠️')) return;
+        
+        navigator.clipboard.writeText(text).then(() => {
+          elements.copyFeedback.style.opacity = '1';
+          setTimeout(() => {
+            elements.copyFeedback.style.opacity = '0';
+          }, 2000);
+        }).catch(err => {
+          console.error('Ошибка копирования:', err);
+        });
+      }
+      
+      // ============ ОБРАБОТЧИКИ СОБЫТИЙ ============
+      
+      /**
+       * Инициализирует обработчики событий
+       */
+      function initEventListeners() {
+        // Ограничение ввода
+        restrictInput(elements.num1);
+        restrictInput(elements.num2);
+        
+        // Кнопки операций
+        elements.operationButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const operation = this.dataset.operation;
+            calculate(operation);
+          });
+        });
+        
+        // Кнопка очистки
+        elements.clearBtn.addEventListener('click', clearAll);
+        
+        // Копирование результата
+        elements.resultContainer.addEventListener('click', function() {
+          copyToClipboard(elements.result.textContent);
+        });
+        
+        elements.resultContainer.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            copyToClipboard(elements.result.textContent);
+          }
+        });
+        
+        // Очистка истории
+        elements.clearHistory.addEventListener('click', clearHistoryData);
+        
+        // Клавиша Enter для повторения последней операции
+        elements.num1.addEventListener('keydown', handleEnterKey);
+        elements.num2.addEventListener('keydown', handleEnterKey);
+        
+        // Автофокус на первом поле
+        elements.num1.focus();
+      }
+      
+      /**
+       * Обработчик нажатия клавиши Enter
+       * @param {KeyboardEvent} e
+       */
+      function handleEnterKey(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (lastOperation) {
+            calculate(lastOperation);
+          } else {
+            // По умолчанию выполняем сложение
+            calculate('sum');
+          }
+        }
+      }
+      
+      // ============ ИНИЦИАЛИЗАЦИЯ ============
+      
+      /**
+       * Инициализирует приложение
+       */
+      function init() {
+        initEventListeners();
+        loadHistoryFromStorage();
+        console.log('Калькулятор инициализирован');
+      }
+      
+      // Запуск после загрузки DOM
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+      
+    })();
+  </script>
+
+</body>
+</html>
