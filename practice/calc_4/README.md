@@ -19,9 +19,6 @@
 - [Тестирование](#-тестирование)
 - [Безопасность](#-безопасность)
 - [Производительность](#-производительность)
-- [Браузерная совместимость](#-браузерная-совместимость)
-- [Разработка](#-разработка)
-- [Лицензия](#-лицензия)
 
 ---
 
@@ -58,7 +55,7 @@
 ### Установка
 
 #### Вариант 1: Прямое использование
-Просто откройте `calculator_fixed.html` в браузере — никаких дополнительных шагов не требуется.
+Просто откройте `calculator.html` в браузере — никаких дополнительных шагов не требуется.
 
 #### Вариант 2: Локальный веб-сервер
 ```bash
@@ -68,13 +65,13 @@ python -m http.server 8000
 # С помощью Node.js
 npx serve
 
-# Затем откройте http://localhost:8000/calculator_fixed.html
+# Затем откройте http://localhost:8000/calculator.html
 ```
 
 #### Вариант 3: Интеграция в проект
 ```html
 <!-- Скопируйте файл в свой проект -->
-<iframe src="calculator_fixed.html" width="100%" height="800"></iframe>
+<iframe src="calculator.html" width="100%" height="800"></iframe>
 ```
 
 ---
@@ -110,16 +107,12 @@ npx serve
 ### Структура проекта
 
 ```
-calculator/
-├── calculator_fixed.html       # Основной HTML файл с встроенным JS
+calc_4/
+├── calculator.html             # Основной HTML файл с встроенным JS
 ├── tests/
 │   ├── calculator.test.js      # Unit-тесты
-│   └── integration.test.js     # Интеграционные тесты
-├── docs/
-│   ├── README.md               # Этот файл
-│   ├── API.md                  # API документация
-│   └── ARCHITECTURE.md         # Детальная архитектура
-└── package.json                # Зависимости для тестирования
+│   └── package.json            # Зависимости для тестирования
+└── README.md                   # Этот файл
 ```
 
 ### Модульная структура кода
@@ -454,13 +447,6 @@ npm test -- --watch
 - Преобразование строк в числа
 - Обработка ошибок
 
-#### Интеграционные тесты (`integration.test.js`)
-Тестируют взаимодействие компонентов:
-- Полный цикл вычисления
-- Взаимодействие с DOM
-- История операций
-- Клавиатурные сокращения
-
 ### Покрытие кода
 
 Целевые показатели:
@@ -498,25 +484,6 @@ npm test -- --watch
    - Логирование ошибок в консоль (не пользователю)
    - Понятные сообщения об ошибках для пользователя
 
-### Рекомендации для продакшена
-
-1. **Для CDN ресурсов добавить SRI (Subresource Integrity):**
-   ```html
-   <script src="https://cdn.tailwindcss.com" 
-           integrity="sha384-..." 
-           crossorigin="anonymous"></script>
-   ```
-
-2. **Рассмотреть локальную сборку Tailwind CSS:**
-   - Устраняет зависимость от внешнего CDN
-   - Уменьшает размер CSS (только используемые классы)
-   - Улучшает производительность
-
-3. **Добавить rate limiting для операций:**
-   - Предотвращение DOS-атак через частые вычисления
-
----
-
 ## ⚡ Производительность
 
 ### Метрики
@@ -551,144 +518,6 @@ npm test -- --watch
    - Асинхронная запись (не блокирует UI)
    - Try-catch для безопасности
 
----
-
-## 🌐 Браузерная совместимость
-
-### Поддерживаемые браузеры
-
-| Браузер | Минимальная версия | Статус |
-|---------|-------------------|--------|
-| Chrome | 90+ | ✅ Полная поддержка |
-| Firefox | 88+ | ✅ Полная поддержка |
-| Safari | 14+ | ✅ Полная поддержка |
-| Edge | 90+ | ✅ Полная поддержка |
-| Opera | 76+ | ✅ Полная поддержка |
-
-### Использованные API
-
-- ✅ **ES6+ синтаксис:** arrow functions, const/let, template literals
-- ✅ **DOM API:** querySelector, addEventListener, classList
-- ✅ **Clipboard API:** `navigator.clipboard.writeText()`
-- ✅ **Local Storage API:** `localStorage.setItem/getItem`
-- ✅ **CSS:** backdrop-filter, CSS Grid, Flexbox
-
-### Fallbacks
-
-- `localStorage` — graceful degradation при отсутствии поддержки
-- `Clipboard API` — логирование ошибки при недоступности
-
----
-
-## 👨‍💻 Разработка
-
-### Локальная разработка
-
-```bash
-# Клонировать репозиторий
-git clone https://github.com/yourusername/calculator.git
-cd calculator
-
-# Установить зависимости для тестирования
-npm install
-
-# Запустить локальный сервер
-npm run serve
-
-# Запустить тесты в watch mode
-npm test -- --watch
-```
-
-### Добавление новой операции
-
-1. Добавить операцию в объект `OPERATIONS`:
-```javascript
-const OPERATIONS = {
-  // ... существующие операции
-  power: {
-    fn: (a, b) => Math.pow(a, b),
-    symbol: '^',
-    name: 'Степень'
-  }
-};
-```
-
-2. Добавить кнопку в HTML:
-```html
-<button
-  data-operation="power"
-  class="..."
-  aria-label="Возведение в степень"
-  title="Возведение в степень (A ^ B)"
->
-  <span class="relative z-10 flex items-center justify-center gap-2">
-    <span class="text-20" aria-hidden="true">^</span>
-    Степень
-  </span>
-  <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-</button>
-```
-
-3. Написать тест:
-```javascript
-test('должен вычислять степень', () => {
-  const result = OPERATIONS.power.fn(2, 3);
-  expect(result).toBe(8);
-});
-```
-
-### Code Style
-
-- **Отступы:** 2 пробела
-- **Кавычки:** одинарные для JS, двойные для HTML
-- **Точка с запятой:** всегда
-- **Именование:**
-  - camelCase для переменных и функций
-  - UPPER_SNAKE_CASE для констант
-  - PascalCase для конструкторов (не используется в этом проекте)
-
-### Commit Guidelines
-
-```
-<type>(<scope>): <subject>
-
-<body>
-
-<footer>
-```
-
-**Types:**
-- `feat`: новая функциональность
-- `fix`: исправление бага
-- `docs`: изменение документации
-- `style`: форматирование кода
-- `refactor`: рефакторинг без изменения поведения
-- `test`: добавление тестов
-- `chore`: изменение конфигурации, зависимостей
-
-**Пример:**
-```
-feat(calculator): добавить операцию возведения в степень
-
-Добавлена новая кнопка и функция для вычисления степени числа.
-
-Closes #42
-```
-
----
-
-## 🤝 Вклад в проект
-
-Мы приветствуем вклад от сообщества! Вот как вы можете помочь:
-
-### Процесс контрибуции
-
-1. **Fork** репозитория
-2. Создайте **feature branch** (`git checkout -b feature/AmazingFeature`)
-3. **Commit** изменений (`git commit -m 'feat: add amazing feature'`)
-4. **Push** в branch (`git push origin feature/AmazingFeature`)
-5. Откройте **Pull Request**
-
 ### Что можно улучшить
 
 - [ ] Добавить больше математических операций (корень, проценты, факториал)
@@ -698,53 +527,3 @@ Closes #42
 - [ ] Добавить локализацию (i18n)
 - [ ] Реализовать цепочечные вычисления
 - [ ] Добавить режим работы с памятью (M+, M-, MR, MC)
-
----
-
-## 📄 Лицензия
-
-Этот проект распространяется под лицензией MIT. Подробности в файле [LICENSE](LICENSE).
-
-```
-MIT License
-
-Copyright (c) 2024 [Your Name]
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
----
-
-## 📞 Контакты
-
-- **Email:** your.email@example.com
-- **GitHub:** [@yourusername](https://github.com/yourusername)
-- **Website:** https://yourwebsite.com
-
----
-
-## 🙏 Благодарности
-
-- [Tailwind CSS](https://tailwindcss.com/) — за отличный CSS фреймворк
-- [Jest](https://jestjs.io/) — за мощный инструмент тестирования
-- Все контрибьюторы проекта
-
----
-
-**Сделано с ❤️ для изучения веб-разработки**
